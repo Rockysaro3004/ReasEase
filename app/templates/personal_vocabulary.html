@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+      <h2 class="fw-bold mb-1" style="color: var(--re-primary);">
+        <i class="bi bi-journal-bookmark-fill me-2 text-amber"></i> My Vocabulary Notebook
+      </h2>
+      <p class="text-muted small mb-0">
+        Personalized study repository of difficult words saved across all your documents.
+      </p>
+    </div>
+    <a href="{{ url_for('documents.list_documents') }}" class="btn btn-outline-custom btn-sm">
+      <i class="bi bi-arrow-left me-1"></i> Back to Documents
+    </a>
+  </div>
+
+  <div class="card-custom">
+    <div class="card-header-custom d-flex justify-content-between align-items-center">
+      <span class="fw-bold"><i class="bi bi-card-list me-2"></i> Saved Terms ({{ items|length }})</span>
+      <span class="badge bg-light text-dark border">{{ items|length }} Words Saved</span>
+    </div>
+    <div class="card-body p-0">
+      {% if items %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small text-muted text-uppercase">
+              <tr>
+                <th class="ps-4">Word</th>
+                <th>Meaning / Definition</th>
+                <th>Source Document</th>
+                <th>Saved Date</th>
+                <th class="text-end pe-4">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items %}
+                <tr>
+                  <td class="ps-4 fw-bold text-dark fs-6">
+                    {{ item.word }}
+                  </td>
+                  <td class="small text-secondary" style="max-width: 380px;">
+                    {{ item.meaning }}
+                  </td>
+                  <td class="small">
+                    {% if item.document %}
+                      <a href="{{ url_for('documents.read_document', doc_id=item.document.id) }}" class="text-decoration-none text-teal">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> {{ item.document.original_filename }}
+                      </a>
+                    {% else %}
+                      <span class="text-muted">General Study</span>
+                    {% endif %}
+                  </td>
+                  <td class="small text-muted">
+                    {{ item.created_at.strftime('%b %d, %Y') }}
+                  </td>
+                  <td class="text-end pe-4">
+                    <form method="POST" action="{{ url_for('documents.delete_vocabulary', vocab_id=item.id) }}" class="d-inline">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button type="submit" class="btn btn-outline-danger btn-sm" title="Remove from notebook">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="p-5 text-center text-muted">
+          <i class="bi bi-journal-plus display-4 text-muted mb-3 d-block"></i>
+          <h5>Your vocabulary notebook is empty</h5>
+          <p class="small mb-3">As you read documents, click "Save to Notebook" on unfamiliar words to study them later.</p>
+          <a href="{{ url_for('documents.list_documents') }}" class="btn btn-primary-custom btn-sm">
+            Explore Study Materials
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

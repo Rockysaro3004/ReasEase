@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Document Header Navigation -->
+  <div class="card-custom p-3 mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-7">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1 small">
+            <li class="breadcrumb-item"><a href="{{ url_for('documents.list_documents') }}" class="text-decoration-none">Documents</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Reader</li>
+          </ol>
+        </nav>
+        <h4 class="fw-bold mb-1 text-truncate" style="color: var(--re-primary);">
+          <i class="bi bi-file-earmark-pdf text-danger me-1"></i> {{ document.original_filename }}
+        </h4>
+        <div class="d-flex flex-wrap gap-3 small text-muted">
+          <span><i class="bi bi-fonts me-1"></i> {{ word_count }} words</span>
+          <span><i class="bi bi-clock me-1"></i> ~{{ estimated_mins }} min read</span>
+          <span><i class="bi bi-calendar3 me-1"></i> Uploaded {{ document.upload_date.strftime('%b %d, %Y') }}</span>
+        </div>
+      </div>
+      <div class="col-md-5 text-md-end mt-3 mt-md-0">
+        <div class="btn-group">
+          <a href="{{ url_for('documents.document_summary', doc_id=document.id) }}" class="btn btn-outline-custom btn-sm">
+            <i class="bi bi-card-text me-1"></i> Summary
+          </a>
+          <a href="{{ url_for('documents.document_vocabulary', doc_id=document.id) }}" class="btn btn-outline-custom btn-sm">
+            <i class="bi bi-spellcheck me-1"></i> Vocab
+          </a>
+          <a href="{{ url_for('documents.document_quiz', doc_id=document.id) }}" class="btn btn-accent btn-sm">
+            <i class="bi bi-patch-question me-1"></i> Take Quiz
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reader Customization & Web Speech API TTS Toolbar -->
+  <div class="tts-toolbar mb-4">
+    <div class="row align-items-center g-3">
+      
+      <!-- Speech Controls -->
+      <div class="col-lg-6">
+        <div class="d-flex align-items-center flex-wrap gap-2">
+          <span class="fw-semibold small text-muted"><i class="bi bi-headphones me-1"></i> Audio:</span>
+          
+          <button id="tts-play-btn" class="btn btn-primary-custom btn-sm">
+            <i class="bi bi-play-fill me-1"></i> Read Aloud
+          </button>
+          <button id="tts-pause-btn" class="btn btn-warning btn-sm d-none">
+            <i class="bi bi-pause-fill me-1"></i> Pause
+          </button>
+          <button id="tts-resume-btn" class="btn btn-success btn-sm d-none">
+            <i class="bi bi-play-fill me-1"></i> Resume
+          </button>
+          <button id="tts-stop-btn" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-stop-fill me-1"></i> Stop
+          </button>
+
+          <span id="tts-status" class="badge bg-secondary ms-1">Ready</span>
+        </div>
+
+        <div class="row g-2 mt-2">
+          <div class="col-auto">
+            <label class="small text-muted me-1">Speed:</label>
+            <select id="tts-speed" class="form-select form-select-sm d-inline-block w-auto">
+              <option value="0.75">0.75x</option>
+              <option value="1.0" selected>1.0x (Normal)</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2.0">2.0x</option>
+            </select>
+          </div>
+          <div class="col">
+            <select id="tts-voice" class="form-select form-select-sm" title="Device Voice">
+              <option value="">Default Device Voice</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Display Controls -->
+      <div class="col-lg-6 text-lg-end">
+        <div class="d-inline-flex align-items-center gap-3">
+          <div class="btn-group btn-group-sm">
+            <button id="btn-font-dec" class="btn btn-outline-secondary" title="Decrease Font">A-</button>
+            <button id="btn-font-reset" class="btn btn-outline-secondary" title="Reset Font">Reset</button>
+            <button id="btn-font-inc" class="btn btn-outline-secondary" title="Increase Font">A+</button>
+          </div>
+
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-secondary" data-reader-theme="light" title="Light Mode">
+              <i class="bi bi-sun"></i>
+            </button>
+            <button class="btn btn-outline-secondary" data-reader-theme="sepia" title="Sepia Mode">
+              <i class="bi bi-book"></i> Sepia
+            </button>
+            <button class="btn btn-outline-secondary" data-reader-theme="dark" title="Dark Mode">
+              <i class="bi bi-moon"></i> Dark
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Fallback message if Web Speech API is not supported -->
+    <div id="tts-unsupported-alert" class="alert alert-warning small mt-3 mb-0 d-none">
+      <i class="bi bi-exclamation-triangle me-1"></i>
+      Text-to-Speech is not supported in this browser version. Voice availability depends on your operating system and browser (e.g. Chrome, Edge, Safari).
+    </div>
+  </div>
+
+  <!-- Extracted Text Reader Workspace -->
+  <div class="reader-container" id="reader-content">
+    {% if document.extracted_text %}
+      {% for paragraph in document.extracted_text.split('\n\n') %}
+        {% if paragraph.strip() %}
+          <p class="mb-3">{{ paragraph.strip() }}</p>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-info">
+        No extractable text was found in this document.
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/reader.js') }}"></script>
+{% endblock %}

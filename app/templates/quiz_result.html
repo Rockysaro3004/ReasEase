@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Result Banner -->
+  <div class="card-custom p-4 p-md-5 mb-4 text-center shadow-sm">
+    <div class="stat-icon {{ 'bg-teal' if evaluation.percentage >= 70 else 'bg-amber' }} mx-auto mb-3" style="width: 64px; height: 64px; font-size: 2rem;">
+      <i class="bi {{ 'bi-award-fill' if evaluation.percentage >= 70 else 'bi-bar-chart-fill' }}"></i>
+    </div>
+    
+    <h2 class="fw-bold mb-1" style="color: var(--re-primary);">Quiz Results</h2>
+    <p class="text-muted small mb-3">Assessment for <strong>{{ document.original_filename }}</strong></p>
+
+    <div class="d-inline-flex align-items-center gap-3 p-3 bg-light rounded-4 border mb-3">
+      <div>
+        <span class="text-muted small text-uppercase fw-semibold d-block">Score</span>
+        <span class="fs-3 fw-bold text-dark">{{ evaluation.score }} / {{ evaluation.total }}</span>
+      </div>
+      <div class="vr"></div>
+      <div>
+        <span class="text-muted small text-uppercase fw-semibold d-block">Accuracy</span>
+        <span class="fs-3 fw-bold {{ 'text-success' if evaluation.percentage >= 70 else 'text-warning' }}">{{ evaluation.percentage }}%</span>
+      </div>
+    </div>
+
+    <div>
+      <a href="{{ url_for('documents.document_quiz', doc_id=document.id) }}" class="btn btn-accent btn-sm me-2">
+        <i class="bi bi-arrow-repeat me-1"></i> Retake Quiz
+      </a>
+      <a href="{{ url_for('documents.read_document', doc_id=document.id) }}" class="btn btn-outline-custom btn-sm">
+        <i class="bi bi-book me-1"></i> Back to Reader
+      </a>
+    </div>
+  </div>
+
+  <!-- Detailed Question Feedback -->
+  <h4 class="fw-bold mb-3" style="color: var(--re-primary);">Detailed Review & Explanations</h4>
+
+  {% for fb in evaluation.feedback %}
+    <div class="card-custom p-4 mb-3" style="border-left: 5px solid {{ '#10b981' if fb.is_correct else '#ef4444' }};">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <span class="badge {{ 'bg-success' if fb.is_correct else 'bg-danger' }} px-3 py-1">
+          {{ 'Correct' if fb.is_correct else 'Incorrect' }}
+        </span>
+        <span class="small text-muted">Question {{ loop.index }}</span>
+      </div>
+
+      <h5 class="fw-semibold text-dark mb-3">{{ fb.question }}</h5>
+
+      <div class="row g-2 mb-3 small">
+        <div class="col-md-6">
+          <div class="p-2 rounded border {{ 'bg-success-subtle text-success border-success-subtle' if fb.is_correct else 'bg-danger-subtle text-danger border-danger-subtle' }}">
+            <strong>Your Answer:</strong> {{ fb.user_choice }}
+          </div>
+        </div>
+        {% if not fb.is_correct %}
+          <div class="col-md-6">
+            <div class="p-2 rounded border bg-success-subtle text-success border-success-subtle">
+              <strong>Correct Answer:</strong> {{ fb.correct_answer }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="p-3 bg-light rounded border small text-secondary">
+        <strong class="text-dark"><i class="bi bi-quote text-primary me-1"></i> Grounded Source Explanation:</strong>
+        <p class="mb-0 mt-1 fst-italic">{{ fb.explanation }}</p>
+      </div>
+    </div>
+  {% endfor %}
+
+</div>
+{% endblock %}

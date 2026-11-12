@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Hero Section -->
+  <div class="row align-items-center py-5">
+    <div class="col-lg-6 mb-4 mb-lg-0">
+      <div class="badge px-3 py-2 rounded-pill mb-3" style="background-color: #ccfbf1; color: #0f766e; font-weight: 600;">
+        <i class="bi bi-mortarboard-fill me-1"></i> Designed for College & High School Students
+      </div>
+      <h1 class="display-4 fw-bold mb-3" style="color: var(--re-primary); letter-spacing: -0.03em;">
+        Read Smarter.<br>
+        Understand Better.<br>
+        <span style="color: var(--re-accent);">Learn Faster.</span>
+      </h1>
+      <p class="lead text-muted mb-4">
+        ReadEase transforms dense lecture slides, academic research papers, and textbook PDFs into clean, readable text, concise extractive summaries, audio narration, and self-assessment quizzes.
+      </p>
+      <div class="d-flex flex-wrap gap-3">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-accent btn-lg px-4 shadow-sm">
+          <i class="bi bi-rocket-takeoff-fill me-2"></i> Start Reading Free
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-custom btn-lg px-4">
+          <i class="bi bi-box-arrow-in-right me-2"></i> Student Log In
+        </a>
+      </div>
+      <div class="mt-4 pt-2 text-muted small d-flex gap-4">
+        <span><i class="bi bi-check2-circle text-teal me-1"></i> No Credit Card Required</span>
+        <span><i class="bi bi-check2-circle text-teal me-1"></i> 100% Free & Open Source</span>
+        <span><i class="bi bi-check2-circle text-teal me-1"></i> Runs Locally</span>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card-custom p-4 shadow-lg border-0" style="background: linear-gradient(145deg, #ffffff, #f1f5f9);">
+        <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-danger rounded-pill"><i class="bi bi-file-earmark-pdf-fill me-1"></i> Biology_Ch4_CellStructure.pdf</span>
+          </div>
+          <span class="badge bg-success"><i class="bi bi-check2 me-1"></i> Text Extracted</span>
+        </div>
+        <div class="p-3 bg-white rounded-3 border mb-3">
+          <div class="small fw-bold text-muted mb-1 text-uppercase">Extractive Summary (35% Compression)</div>
+          <p class="small text-secondary mb-0">
+            "Mitochondria are membrane-bound cell organelles that generate most of the chemical energy needed to power the cell's biochemical reactions. Chemical energy produced by the mitochondria is stored in a small molecule called adenosine triphosphate (ATP)..."
+          </p>
+        </div>
+        <div class="row g-2 text-center">
+          <div class="col-4">
+            <div class="p-2 bg-light rounded border">
+              <i class="bi bi-volume-up-fill text-primary fs-5"></i>
+              <div class="small fw-semibold mt-1">Web Speech</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-2 bg-light rounded border">
+              <i class="bi bi-translate text-teal fs-5"></i>
+              <div class="small fw-semibold mt-1">Academic Vocab</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-2 bg-light rounded border">
+              <i class="bi bi-question-circle-fill text-warning fs-5"></i>
+              <div class="small fw-semibold mt-1">Instant Quiz</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Grid -->
+  <div id="features" class="py-5">
+    <div class="text-center max-w-700 mx-auto mb-5">
+      <h2 class="fw-bold" style="color: var(--re-primary);">Powerful Tools Built for Academic Success</h2>
+      <p class="text-muted">Everything you need to master difficult course readings in one cohesive student platform.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card-custom p-4 h-100 card-hover">
+          <div class="stat-icon bg-blue mb-3">
+            <i class="bi bi-file-earmark-text-fill"></i>
+          </div>
+          <h5 class="fw-bold mb-2">PyMuPDF Text Extraction</h5>
+          <p class="text-muted small">
+            Instantly extracts clean, readable text from complex PDF documents, discarding broken layouts, clutter, and distractions.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card-custom p-4 h-100 card-hover">
+          <div class="stat-icon bg-teal mb-3">
+            <i class="bi bi-card-checklist"></i>
+          </div>
+          <h5 class="fw-bold mb-2">Extractive Summarization</h5>
+          <p class="text-muted small">
+            Frequency-based sentence extraction algorithms identify the most critical factual statements without hallucinating or altering definitions.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card-custom p-4 h-100 card-hover">
+          <div class="stat-icon bg-indigo mb-3">
+            <i class="bi bi-headphones"></i>
+          </div>
+          <h5 class="fw-bold mb-2">Web Speech Audio Narration</h5>
+          <p class="text-muted small">
+            Listen to your chapters with zero external cloud subscriptions using your browser's native speech synthesis engine with rate controls.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card-custom p-4 h-100 card-hover">
+          <div class="stat-icon bg-amber mb-3">
+            <i class="bi bi-spellcheck"></i>
+          </div>
+          <h5 class="fw-bold mb-2">Vocabulary Assistant</h5>
+          <p class="text-muted small">
+            Automatically surfaces high-frequency collegiate and technical terminology with definitions, parts of speech, and 1-click notebook saving.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card-custom p-4 h-100 card-hover">
+          <div class="stat-icon bg-teal mb-3">
+            <i class="bi bi-patch-question-fill"></i>
+          </div>
+          <h5 class="fw-bold mb-2">Grounded Self-Testing Quizzes</h5>
+          <p class="text-muted small">
+            Generates multiple-choice check questions anchored directly in the source text, reinforcing active recall before exam day.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card-custom p-4 h-100 card-hover">
+          <div class="stat-icon bg-blue mb-3">
+            <i class="bi bi-shield-lock-fill"></i>
+          </div>
+          <h5 class="fw-bold mb-2">Private & Secure by Design</h5>
+          <p class="text-muted small">
+            Each student's documents, summaries, and notebook items are strictly isolated in SQLite using authenticated session security.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How It Works Section -->
+  <div id="how-it-works" class="py-5 bg-white rounded-4 border p-4 p-md-5 my-4">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold" style="color: var(--re-primary);">How ReadEase Works</h2>
+      <p class="text-muted">Four simple steps from dense reading material to active comprehension.</p>
+    </div>
+
+    <div class="row g-4 text-center">
+      <div class="col-md-3">
+        <div class="badge rounded-circle p-3 bg-teal text-dark mb-3 fs-5">1</div>
+        <h6 class="fw-bold">Upload Your PDF</h6>
+        <p class="text-muted small">Upload your course syllabus, article, or chapter up to 10 MB in standard PDF format.</p>
+      </div>
+
+      <div class="col-md-3">
+        <div class="badge rounded-circle p-3 bg-blue text-dark mb-3 fs-5">2</div>
+        <h6 class="fw-bold">Read or Listen</h6>
+        <p class="text-muted small">Read in a distraction-free interface or use text-to-speech to listen at your chosen pace.</p>
+      </div>
+
+      <div class="col-md-3">
+        <div class="badge rounded-circle p-3 bg-indigo text-dark mb-3 fs-5">3</div>
+        <h6 class="fw-bold">Review Vocab & Summaries</h6>
+        <p class="text-muted small">Generate extractive summaries and save unfamiliar technical terms into your personal notebook.</p>
+      </div>
+
+      <div class="col-md-3">
+        <div class="badge rounded-circle p-3 bg-amber text-dark mb-3 fs-5">4</div>
+        <h6 class="fw-bold">Take Quick Quizzes</h6>
+        <p class="text-muted small">Test your comprehension with automated multiple-choice questions grounded in the text.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call to Action Banner -->
+  <div class="p-5 text-center text-white rounded-4 my-5" style="background: linear-gradient(135deg, var(--re-primary), #1e293b);">
+    <h2 class="fw-bold mb-3">Ready to Make Studying Less Stressful?</h2>
+    <p class="lead mb-4 text-slate-300">Join students using ReadEase to master challenging reading assignments faster.</p>
+    <a href="{{ url_for('auth.register') }}" class="btn btn-accent btn-lg px-5 shadow">
+      Create Your Student Account
+    </a>
+  </div>
+
+</div>
+{% endblock %}

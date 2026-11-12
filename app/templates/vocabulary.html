@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Breadcrumb & Header -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-1 small">
+      <li class="breadcrumb-item"><a href="{{ url_for('documents.list_documents') }}" class="text-decoration-none">Documents</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('documents.read_document', doc_id=document.id) }}" class="text-decoration-none">{{ document.original_filename }}</a></li>
+      <li class="breadcrumb-item active">Vocabulary Assistant</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+      <h2 class="fw-bold mb-1" style="color: var(--re-primary);">
+        <i class="bi bi-spellcheck me-2 text-teal"></i> Academic Vocabulary Assistant
+      </h2>
+      <p class="text-muted small mb-0">
+        Key terminology and challenging words identified in <strong>{{ document.original_filename }}</strong>.
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('documents.personal_vocabulary') }}" class="btn btn-outline-custom btn-sm">
+        <i class="bi bi-journal-bookmark me-1"></i> My Saved Notebook
+      </a>
+      <a href="{{ url_for('documents.read_document', doc_id=document.id) }}" class="btn btn-outline-custom btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Back to Reader
+      </a>
+    </div>
+  </div>
+
+  <!-- Vocabulary Cards Grid -->
+  {% if vocabulary_items %}
+    <div class="row g-3">
+      {% for item in vocabulary_items %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card-custom h-100 p-4 vocab-card d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <h4 class="fw-bold mb-0 text-dark">{{ item.word }}</h4>
+                  <span class="badge bg-light text-muted border small mt-1">{{ item.part_of_speech }}</span>
+                </div>
+                <span class="badge bg-teal text-dark" title="Frequency in document">
+                  <i class="bi bi-hash"></i> {{ item.frequency }}x
+                </span>
+              </div>
+
+              <div class="mt-3">
+                <div class="small fw-semibold text-muted text-uppercase mb-1">Definition:</div>
+                <p class="small text-dark mb-2" style="line-height: 1.5;">
+                  {{ item.meaning }}
+                </p>
+              </div>
+
+              {% if item.example %}
+                <div class="p-2 rounded bg-light border small text-muted fst-italic mb-3">
+                  "{{ item.example }}"
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+              <span class="badge bg-light text-secondary border small">{{ item.source }}</span>
+
+              {% if item.word.lower() in saved_words %}
+                <span class="badge bg-success-subtle text-success border border-success-subtle py-2 px-3">
+                  <i class="bi bi-check2 me-1"></i> Saved to Notebook
+                </span>
+              {% else %}
+                <form method="POST" action="{{ url_for('documents.save_vocabulary') }}" class="d-inline">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <input type="hidden" name="document_id" value="{{ document.id }}">
+                  <input type="hidden" name="word" value="{{ item.word }}">
+                  <input type="hidden" name="meaning" value="{{ item.meaning }}">
+                  <button type="submit" class="btn btn-outline-custom btn-sm">
+                    <i class="bi bi-bookmark-plus text-teal me-1"></i> Save to Notebook
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card-custom p-5 text-center text-muted">
+      <i class="bi bi-journal-x display-4 text-muted mb-3 d-block"></i>
+      <h5>No candidate vocabulary terms detected</h5>
+      <p class="small mb-0">The text may be too short or contains only very basic vocabulary words.</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

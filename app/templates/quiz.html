@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Breadcrumb & Header -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-1 small">
+      <li class="breadcrumb-item"><a href="{{ url_for('documents.list_documents') }}" class="text-decoration-none">Documents</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('documents.read_document', doc_id=document.id) }}" class="text-decoration-none">{{ document.original_filename }}</a></li>
+      <li class="breadcrumb-item active">Active Quiz</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div>
+      <h2 class="fw-bold mb-1" style="color: var(--re-primary);">
+        <i class="bi bi-patch-question-fill me-2 text-teal"></i> Active Recall Quiz
+      </h2>
+      <p class="text-muted small mb-0">
+        Multiple-choice assessment grounded strictly in <strong>{{ document.original_filename }}</strong>.
+      </p>
+    </div>
+    <a href="{{ url_for('documents.read_document', doc_id=document.id) }}" class="btn btn-outline-custom btn-sm">
+      <i class="bi bi-arrow-left me-1"></i> Back to Reader
+    </a>
+  </div>
+
+  <div class="row g-4">
+    <!-- Active Quiz Questions Form -->
+    <div class="col-lg-8">
+      {% if questions %}
+        <form method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+          {% for q in questions %}
+            <div class="card-custom p-4 mb-4 shadow-sm">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-teal text-dark px-3 py-2 fw-bold">Question {{ loop.index }} of {{ questions|length }}</span>
+                <span class="small text-muted">Single Choice</span>
+              </div>
+
+              <h5 class="fw-semibold text-dark mb-4" style="line-height: 1.5;">
+                {{ q.question }}
+              </h5>
+
+              <div class="options-group">
+                {% for option in q.options %}
+                  <div class="quiz-option">
+                    <input class="form-check-input mt-0" type="radio" name="{{ q.id }}" id="opt_{{ q.id }}_{{ loop.index }}" value="{{ option }}" required>
+                    <label class="form-check-label w-100 mb-0 ms-2" for="opt_{{ q.id }}_{{ loop.index }}" style="cursor: pointer;">
+                      {{ option }}
+                    </label>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+
+          <div class="card-custom p-4 text-center">
+            <button type="submit" class="btn btn-accent btn-lg px-5 shadow">
+              <i class="bi bi-check2-circle me-1"></i> Submit Quiz for Grading
+            </button>
+            <div class="small text-muted mt-2">
+              All questions are scored based on the verified source statements.
+            </div>
+          </div>
+        </form>
+      {% else %}
+        <div class="card-custom p-5 text-center text-muted">
+          <i class="bi bi-journal-x display-4 text-muted mb-3 d-block"></i>
+          <h5>Could not generate questions</h5>
+          <p class="small mb-0">The document text may be too short or lacks sufficient definition patterns to generate a quiz.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Past Attempts Sidebar -->
+    <div class="col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-custom">
+          <span class="fw-bold"><i class="bi bi-trophy-fill me-2 text-amber"></i> Past Quiz Attempts</span>
+        </div>
+        <div class="card-body p-0">
+          {% if past_attempts %}
+            <ul class="list-group list-group-flush small">
+              {% for attempt in past_attempts %}
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                  <div>
+                    <div class="fw-bold text-dark">
+                      {{ attempt.score }} / {{ attempt.total_questions }} Correct
+                    </div>
+                    <div class="text-muted" style="font-size: 0.8rem;">
+                      {{ attempt.completed_at.strftime('%b %d, %Y - %I:%M %p') }}
+                    </div>
+                  </div>
+                  <span class="badge {{ 'bg-success' if attempt.score / attempt.total_questions >= 0.7 else 'bg-warning text-dark' }} rounded-pill px-3 py-2">
+                    {{ ((attempt.score / attempt.total_questions) * 100)|round(1) }}%
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="p-4 text-center text-muted small">
+              No previous attempts yet. Complete your first quiz to track your mastery!
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
